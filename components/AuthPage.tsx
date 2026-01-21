@@ -36,8 +36,8 @@ export function AuthPage({ onAuth, onEmployeeLogin, onBack }: AuthPageProps) {
   const mockEmployees = [
     {
       id: 1,
-      name: 'João Silva',
-      email: 'joao.silva@3ri.com.br',
+      name: 'João Gabriel',
+      email: 'gabriel@3ri.com.br',
       department: 'Atendimento',
       position: 'Escrevente',
       completedCourses: 1
@@ -248,7 +248,7 @@ export function AuthPage({ onAuth, onEmployeeLogin, onBack }: AuthPageProps) {
                 </div>
                 <div>
                   <strong>Colaborador:</strong>
-                  <br />📧 Email: joao.silva@3ri.com.br
+                  <br />📧 Email: gabriel@3ri.com.br
                   <br />🔒 Senha: senha123
                 </div>
               </div>

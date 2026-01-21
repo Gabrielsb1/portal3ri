@@ -8,32 +8,24 @@ import {
   Users, 
   BookOpen, 
   Trophy, 
-  TrendingUp, 
-  Star, 
-  Play, 
   CheckCircle, 
   ArrowRight,
   GraduationCap,
-  Target,
   BarChart3,
   Clock,
   Award,
-  Eye,
-  UserPlus,
   Sparkles,
   Bot,
-  Shield,
-  Zap
+  Shield
 } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
 interface LandingPageProps {
   onGetStarted: () => void;
   onCompanyAccess: () => void;
-  onDemo: () => void;
 }
 
-export function LandingPage({ onGetStarted, onCompanyAccess, onDemo }: LandingPageProps) {
+export function LandingPage({ onGetStarted, onCompanyAccess }: LandingPageProps) {
   const features = [
     {
       icon: Users,
@@ -137,12 +129,8 @@ export function LandingPage({ onGetStarted, onCompanyAccess, onDemo }: LandingPa
           
           <div className="flex items-center space-x-4">
             <ThemeToggle />
-            <Button variant="ghost" onClick={onDemo}>
-              <Eye className="w-4 h-4 mr-2" />
-              Ver Demonstração
-            </Button>
             <Button onClick={onGetStarted} className="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 shadow-lg">
-              Acessar Plataforma
+              Acessar Portal
             </Button>
           </div>
         </div>
@@ -163,11 +151,11 @@ export function LandingPage({ onGetStarted, onCompanyAccess, onDemo }: LandingPa
             </h1>
             
             <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Portal único para a administração do cartório acompanhar treinamentos internos, rotinas registrais
+              Portal interno para administração do cartório acompanhar treinamentos, rotinas registrais
               e indicadores de produtividade por setor.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="flex justify-center items-center">
               <Button 
                 onClick={onGetStarted} 
                 size="lg" 
@@ -176,10 +164,6 @@ export function LandingPage({ onGetStarted, onCompanyAccess, onDemo }: LandingPa
                 <Building2 className="w-5 h-5 mr-2" />
                 Acessar Portal Interno
                 <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-              <Button variant="outline" size="lg" onClick={onDemo}>
-                <Play className="w-5 h-5 mr-2" />
-                Ver Demonstração
               </Button>
             </div>
           </div>
@@ -191,10 +175,10 @@ export function LandingPage({ onGetStarted, onCompanyAccess, onDemo }: LandingPa
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl mb-6 text-gray-900 dark:text-gray-50">
-              Tudo que você precisa para capacitar sua equipe
+              Recursos disponíveis no portal interno
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Uma plataforma completa que conecta gestores e funcionários no processo de aprendizagem
+              Ferramentas integradas para gestão de pessoas, treinamentos e rotinas do cartório
             </p>
           </div>
           
@@ -298,17 +282,11 @@ export function LandingPage({ onGetStarted, onCompanyAccess, onDemo }: LandingPa
                   <CardDescription>{course.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                      <span className="flex items-center">
-                        <Trophy className="w-4 h-4 mr-1" />
-                        Certificado
-                      </span>
-                    </div>
-                    <Button variant="outline" size="sm">
-                      <Play className="w-4 h-4 mr-1" />
-                      Preview
-                    </Button>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <span className="flex items-center">
+                      <Trophy className="w-4 h-4 mr-1" />
+                      Certificado de conclusão
+                    </span>
                   </div>
                 </CardContent>
               </Card>
@@ -317,68 +295,6 @@ export function LandingPage({ onGetStarted, onCompanyAccess, onDemo }: LandingPa
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl mb-6 text-gray-900 dark:text-gray-50">
-              Resultados que você pode esperar
-            </h2>
-          </div>
-          
-          <div className="grid md:grid-cols-4 gap-8">
-            {[
-              { number: '85%', label: 'Aumento no Engajamento', icon: TrendingUp },
-              { number: '92%', label: 'Taxa de Conclusão', icon: CheckCircle },
-              { number: '40h', label: 'Média de Estudo/Mês', icon: Clock },
-              { number: '98%', label: 'Satisfação dos Usuários', icon: Star }
-            ].map((stat, index) => (
-              <Card key={index} className="text-center shadow-lg border-0 bg-card backdrop-blur-sm">
-                <CardContent className="pt-8 pb-8">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                    <stat.icon className="w-6 h-6 text-white" />
-                  </div>
-                  <div className="text-3xl text-foreground mb-2">{stat.number}</div>
-                  <div className="text-muted-foreground">{stat.label}</div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-700 dark:to-purple-700">
-        <div className="container mx-auto text-center">
-          <div className="max-w-3xl mx-auto text-white">
-            <h2 className="text-3xl md:text-4xl mb-6">
-              Eleve o padrão de atendimento e organização do 3º Registro de Imóveis
-            </h2>
-            <p className="text-xl mb-8 opacity-90">
-              Comece hoje mesmo a estruturar treinamentos, rotinas e indicadores em um único portal interno
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                onClick={onGetStarted} 
-                size="lg" 
-                className="bg-white dark:bg-gray-100 text-blue-600 dark:text-blue-700 hover:bg-gray-100 dark:hover:bg-gray-200 shadow-xl"
-              >
-                <UserPlus className="w-5 h-5 mr-2" />
-                Começar Agora
-              </Button>
-              <Button 
-                variant="outline" 
-                size="lg" 
-                onClick={onDemo}
-                className="border-white text-white hover:bg-white/10 dark:hover:bg-white/20"
-              >
-                <Eye className="w-5 h-5 mr-2" />
-                Ver Demonstração
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Footer */}
       <footer className="py-12 px-4 bg-white/80 dark:bg-gray-800/80 border-t border-gray-200/60 dark:border-gray-700/60">

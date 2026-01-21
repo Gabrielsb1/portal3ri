@@ -51,9 +51,10 @@ interface EmployeeDashboardProps {
   onUpgrade?: () => void;
   feedbacks?: any[];
   onMarkFeedbackAsRead?: (feedbackId: number) => void;
+  onStartCourse?: (courseId: number) => void;
 }
 
-export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUpgrade, feedbacks = [], onMarkFeedbackAsRead }: EmployeeDashboardProps) {
+export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUpgrade, feedbacks = [], onMarkFeedbackAsRead, onStartCourse }: EmployeeDashboardProps) {
   const [completedCourses, setCompletedCourses] = useState(employee?.completedCourses || 1);
   const [chatMessages, setChatMessages] = useState([
     {
@@ -150,7 +151,10 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
     const course = courses.find(c => c.id === courseId);
     if (!course) return;
 
-    alert(`Iniciando "${course.title}"!\n\n📚 Curso: ${course.title}\n👨‍🏫 Instrutor: ${course.instructor}\n⏱️ Duração: ${course.duration}\n📊 Nível: ${course.level}\n🎯 Inclui: Prova para certificação\n\nEm uma versão real, isso abriria o player do curso com as aulas.`);
+    // Chamar callback para abrir o player do curso
+    if (onStartCourse) {
+      onStartCourse(courseId);
+    }
   };
 
   const handleCompleteCourse = (courseId: number) => {
@@ -163,7 +167,7 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
     const course = courses.find(c => c.id === courseId);
     if (!course) return;
     
-    setCompletedCourses(prev => Math.max(prev, courseId));
+    setCompletedCourses((prev: number) => Math.max(prev, courseId));
     alert(`Parabéns! Você completou "${course.title}"! 🎉\n\n✅ Curso concluído\n🎯 Prova incluída no curso\n📜 Certificado disponível\n📈 Seu progresso foi atualizado\n\nSeu gestor foi notificado sobre sua conclusão!`);
   };
 
@@ -443,7 +447,7 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                       ].map((item, index, array) => {
                         const course = courses.find(c => c.id === item.id);
                         const isCompleted = course?.completed || false;
-                        const isInProgress = course?.progress > 0 && course?.progress < 100;
+                        const isInProgress = (course?.progress ?? 0) > 0 && (course?.progress ?? 0) < 100;
                         // Verifica se é o próximo curso recomendado (primeiro não completado após os anteriores completados)
                         const previousCourse = index > 0 ? courses.find(c => c.id === array[index - 1].id) : null;
                         const isNext = !isCompleted && !isInProgress && (index === 0 || (previousCourse?.completed || false));
@@ -458,13 +462,13 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                                     ? 'bg-blue-600 dark:bg-blue-500 text-white' 
                                     : isNext
                                       ? 'bg-purple-600 dark:bg-purple-500 text-white ring-2 ring-purple-300 dark:ring-purple-700'
-                                      : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+                                      : 'bg-muted text-muted-foreground'
                               }`}>
                                 {isCompleted ? <CheckCircle className="w-5 h-5" /> : item.step}
                               </div>
                               {index < array.length - 1 && (
                                 <div className={`w-0.5 h-12 my-1 ${
-                                  isCompleted ? 'bg-green-600 dark:bg-green-500' : 'bg-gray-200 dark:bg-gray-700'
+                                  isCompleted ? 'bg-green-600 dark:bg-green-500' : 'bg-muted'
                                 }`} />
                               )}
                             </div>
@@ -750,7 +754,7 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                           .map((feedback) => (
                             <Card 
                               key={feedback.id} 
-                              className={`${!feedback.read ? 'border-blue-200 bg-blue-50' : 'border-gray-200'} hover:shadow-md transition-shadow`}
+                              className={`${!feedback.read ? 'border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30' : 'border-border'} hover:shadow-md transition-shadow`}
                             >
                               <CardContent className="p-4">
                                 <div className="flex items-start justify-between mb-3">
