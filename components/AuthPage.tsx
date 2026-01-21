@@ -4,12 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Input } from './ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { ThemeToggle } from './ui/theme-toggle';
-import { 
-  ArrowLeft, 
-  Building2, 
-  User, 
-  Mail, 
-  Lock, 
+import {
+  ArrowLeft,
+  Building2,
+  User,
+  Mail,
+  Lock,
   GraduationCap,
   Users,
   Sparkles
@@ -66,15 +66,15 @@ export function AuthPage({ onAuth, onEmployeeLogin, onBack }: AuthPageProps) {
 
     // Simular delay de autenticação
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     try {
       if (userType === 'employee') {
         if (isLogin) {
           // Login do colaborador
-          const employee = mockEmployees.find(emp => 
+          const employee = mockEmployees.find(emp =>
             emp.email.toLowerCase() === formData.email.toLowerCase()
           );
-          
+
           if (employee && formData.password === 'senha123') {
             onEmployeeLogin(employee);
           } else {
@@ -135,13 +135,13 @@ export function AuthPage({ onAuth, onEmployeeLogin, onBack }: AuthPageProps) {
               {isLogin ? 'Entrar no Portal Interno' : 'Criar Acesso'}
             </CardTitle>
             <CardDescription>
-              {userType === 'employee' 
+              {userType === 'employee'
                 ? (isLogin ? 'Acesse seus treinamentos e informações internas' : 'Peça ao Oficial ou gestor para cadastrá-lo')
                 : (isLogin ? 'Acesse o painel da administração do cartório' : 'Registre o acesso administrativo do cartório')
               }
             </CardDescription>
           </CardHeader>
-          
+
           <CardContent>
             <Tabs value={userType} onValueChange={(value) => setUserType(value as 'employee' | 'company')} className="mb-6">
               <TabsList className="grid w-full grid-cols-2">
@@ -158,9 +158,9 @@ export function AuthPage({ onAuth, onEmployeeLogin, onBack }: AuthPageProps) {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {!isLogin && userType === 'employee' && (
-                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <p className="text-sm text-yellow-800">
-                    <strong>Importante:</strong> O cadastro de funcionários deve ser feito pelo gestor da empresa. 
+                <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-900/50 rounded-lg">
+                  <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                    <strong>Importante:</strong> O cadastro de funcionários deve ser feito pelo gestor da empresa.
                     Fale com seu gestor para ter acesso à plataforma.
                   </p>
                 </div>
@@ -169,28 +169,28 @@ export function AuthPage({ onAuth, onEmployeeLogin, onBack }: AuthPageProps) {
               {!isLogin && userType === 'company' && (
                 <>
                   <div>
-                    <label className="text-sm text-gray-600 mb-1 block">Nome do Oficial / Responsável *</label>
+                    <label className="text-sm text-gray-600 dark:text-gray-300 mb-1 block">Nome do Oficial / Responsável *</label>
                     <div className="relative">
-                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
                       <Input
                         placeholder="Seu nome completo"
                         value={formData.name}
                         onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                        className="pl-10"
+                        className="pl-10 dark:bg-gray-800 dark:border-gray-700"
                         required
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-sm text-gray-600 mb-1 block">Nome do Cartório *</label>
+                    <label className="text-sm text-gray-600 dark:text-gray-300 mb-1 block">Nome do Cartório *</label>
                     <div className="relative">
-                      <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
                       <Input
                         placeholder="3º Registro de Imóveis de São Luís/MA"
                         value={formData.company}
                         onChange={(e) => setFormData(prev => ({ ...prev, company: e.target.value }))}
-                        className="pl-10"
+                        className="pl-10 dark:bg-gray-800 dark:border-gray-700"
                         required
                       />
                     </div>
@@ -199,37 +199,37 @@ export function AuthPage({ onAuth, onEmployeeLogin, onBack }: AuthPageProps) {
               )}
 
               <div>
-                <label className="text-sm text-gray-600 mb-1 block">Email institucional *</label>
+                <label className="text-sm text-gray-600 dark:text-gray-300 mb-1 block">Email institucional *</label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
                   <Input
                     type="email"
                     placeholder={userType === 'employee' ? 'nome.sobrenome@3ri.com.br' : 'oficial@3ri.com.br'}
                     value={formData.email}
                     onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                    className="pl-10"
+                    className="pl-10 dark:bg-gray-800 dark:border-gray-700"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-sm text-gray-600 mb-1 block">Senha *</label>
+                <label className="text-sm text-gray-600 dark:text-gray-300 mb-1 block">Senha *</label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
                   <Input
                     type="password"
                     placeholder="Sua senha"
                     value={formData.password}
                     onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                    className="pl-10"
+                    className="pl-10 dark:bg-gray-800 dark:border-gray-700"
                     required
                   />
                 </div>
               </div>
 
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 className="w-full bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg hover:shadow-xl transition-shadow"
                 disabled={(!isLogin && userType === 'employee') || isLoading}
               >
@@ -238,9 +238,9 @@ export function AuthPage({ onAuth, onEmployeeLogin, onBack }: AuthPageProps) {
             </form>
 
             {/* Credenciais de demonstração */}
-            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-              <h4 className="text-sm mb-2">💡 Credenciais de teste (ambiente de demonstração):</h4>
-              <div className="space-y-2 text-xs">
+            <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-100 dark:border-gray-700">
+              <h4 className="text-sm mb-2 text-gray-900 dark:text-gray-200">💡 Credenciais de teste (ambiente de demonstração):</h4>
+              <div className="space-y-2 text-xs text-gray-600 dark:text-gray-400">
                 <div>
                   <strong>Administração (Oficial do Cartório):</strong>
                   <br />📧 Email: oficial@3ri.com.br
@@ -255,13 +255,13 @@ export function AuthPage({ onAuth, onEmployeeLogin, onBack }: AuthPageProps) {
             </div>
 
             <div className="mt-6 text-center">
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 onClick={() => setIsLogin(!isLogin)}
                 className="text-sm"
                 disabled={(!isLogin && userType === 'employee') || isLoading}
               >
-                {isLogin 
+                {isLogin
                   ? (userType === 'employee' ? 'Precisa de acesso? Fale com o Oficial ou gestor' : 'Não tem acesso? Registre o cartório')
                   : (userType === 'employee' ? 'Já tem acesso? Fazer login' : 'Já possui acesso? Fazer login')
                 }

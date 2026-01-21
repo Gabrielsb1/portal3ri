@@ -9,16 +9,24 @@ import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Separator } from './ui/separator';
 import { ThemeToggle } from './ui/theme-toggle';
-import { 
-  BookOpen, 
-  Users, 
-  Trophy, 
-  Star, 
-  Play, 
-  CheckCircle, 
-  Heart, 
-  MessageCircle, 
-  Share, 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import {
+  BookOpen,
+  Users,
+  Trophy,
+  Star,
+  Play,
+  CheckCircle,
+  Heart,
+  MessageCircle,
+  Share,
   Download,
   Video,
   FileText,
@@ -40,7 +48,9 @@ import {
   ThumbsUp,
   Map,
   ArrowRight,
-  List
+  List,
+  Lock,
+  Check
 } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
@@ -166,7 +176,7 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
 
     const course = courses.find(c => c.id === courseId);
     if (!course) return;
-    
+
     setCompletedCourses((prev: number) => Math.max(prev, courseId));
     alert(`Parabéns! Você completou "${course.title}"! 🎉\n\n✅ Curso concluído\n🎯 Prova incluída no curso\n📜 Certificado disponível\n📈 Seu progresso foi atualizado\n\nSeu gestor foi notificado sobre sua conclusão!`);
   };
@@ -196,7 +206,7 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
       ];
 
       const randomResponse = aiResponses[Math.floor(Math.random() * aiResponses.length)];
-      
+
       const aiMessage = {
         id: chatMessages.length + 2,
         type: 'ai',
@@ -230,7 +240,7 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
               <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">3º Registro de Imóveis de São Luís/MA</span>
             </div>
           </div>
-          
+
           <div className="flex items-center space-x-2 sm:space-x-4 flex-wrap justify-center sm:justify-end">
             <ThemeToggle />
             <Button variant="ghost" size="sm" className="relative hover:bg-gray-100/80 dark:hover:bg-gray-700/80">
@@ -299,7 +309,7 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                   </div>
                   <Progress value={(completedCoursesCount / totalCourses) * 100} className="h-2" />
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-4 text-center">
                   <div>
                     <div className="text-xl sm:text-2xl text-blue-600 dark:text-blue-400">{completedCoursesCount}</div>
@@ -333,6 +343,153 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                 </div>
               </CardContent>
             </Card>
+
+            {/* Trilha de Aprendizado Summary - Trigger for Modal */}
+            <Dialog>
+              <DialogTrigger asChild>
+                <Card className="shadow-lg border-0 bg-card backdrop-blur-sm cursor-pointer hover:scale-[1.02] transition-transform group relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-purple-500" />
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base sm:text-lg flex items-center justify-between">
+                      <span>Trilha Recomendada</span>
+                      <Map className="w-4 h-4 text-blue-600 dark:text-blue-400 group-hover:animate-bounce" />
+                    </CardTitle>
+                    <CardDescription className="text-xs">
+                      Clique para ver sua jornada
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center">
+                        <span className="text-blue-700 dark:text-blue-300 font-bold text-sm">
+                          {(courses.find(c => (c.progress > 0 && c.progress < 100)) || courses.find(c => !c.completed))?.id || 5}
+                        </span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium leading-none line-clamp-1">
+                          {(courses.find(c => (c.progress > 0 && c.progress < 100)) || courses.find(c => !c.completed))?.title || 'Trilha Concluída!'}
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {courses.filter(c => c.completed).length}/{courses.length} etapas concluídas
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </DialogTrigger>
+              <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden">
+                <DialogHeader className="pb-6 border-b border-gray-100 dark:border-gray-800">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-lg">
+                        <Map className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                          Sua Jornada de Evolução
+                        </DialogTitle>
+                        <DialogDescription className="text-sm mt-1">
+                          {courses.filter(c => c.completed).length} de {courses.length} etapas concluídas
+                        </DialogDescription>
+                      </div>
+                    </div>
+                  </div>
+                </DialogHeader>
+
+                <div className="mt-6 px-2 sm:px-4">
+                  <div className="relative border-l-2 border-gray-200 dark:border-gray-800 ml-4 space-y-8 my-4 font-sans">
+                    {[
+                      { id: 4, step: 1, title: 'Certidões e Matrículas', subtitle: 'Fundamentos essenciais', duration: '2h' },
+                      { id: 2, step: 2, title: 'Atendimento ao Público', subtitle: 'Excelência no trato', duration: '4h' },
+                      { id: 1, step: 3, title: 'Procedimentos de Registro', subtitle: 'Do protocolo ao registro', duration: '6h' },
+                      { id: 5, step: 4, title: 'Gestão de Protocolo', subtitle: 'Eficiência e prazos', duration: '4h' },
+                      { id: 3, step: 5, title: 'Normas e Rotinas', subtitle: 'Compliance e padrões', duration: '6h' }
+                    ].map((item, index, array) => {
+                      const course = courses.find(c => c.id === item.id);
+                      const isCompleted = course?.completed || false;
+                      const isInProgress = (course?.progress ?? 0) > 0 && (course?.progress ?? 0) < 100;
+                      const previousCourse = index > 0 ? courses.find(c => c.id === array[index - 1].id) : null;
+                      const isNext = !isCompleted && !isInProgress && (index === 0 || (previousCourse?.completed || false));
+
+                      return (
+                        <div key={item.id} className="flex items-start gap-4">
+                          {/* Stepper Icon */}
+                          <div className="flex flex-col items-center">
+                            <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${isCompleted ? 'border-green-500 bg-green-500' : (isNext || isInProgress) ? 'border-blue-500 bg-blue-500 scale-110' : 'border-gray-300 dark:border-gray-700 bg-gray-200 dark:bg-gray-800'
+                              } transition-all duration-300`}>
+                              {isCompleted && <Check className="w-4 h-4 text-white" />}
+                              {(isNext || isInProgress) && <Play className="w-4 h-4 text-white fill-current" />}
+                              {!isCompleted && !isNext && !isInProgress && <Lock className="w-4 h-4 text-gray-500 dark:text-gray-400" />}
+                            </div>
+                            {index < array.length - 1 && (
+                              <div className={`w-0.5 h-full ${isCompleted ? 'bg-green-500' : (isNext || isInProgress) ? 'bg-blue-300 dark:bg-blue-700' : 'bg-gray-200 dark:bg-gray-700'} transition-colors duration-300`} />
+                            )}
+                          </div>
+
+                          {/* Content */}
+                          <div className={`flex-1 pb-8 ${isNext || isInProgress ? 'transform -translate-y-2' : ''} transition-all duration-300`}>
+                            {(isNext || isInProgress) ? (
+                              <Card className="border-l-4 border-l-blue-500 shadow-md bg-card/50 backdrop-blur-sm overflow-hidden">
+                                <CardContent className="p-4 sm:p-5">
+                                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                                    <div className="space-y-1">
+                                      <div className="flex items-center gap-2">
+                                        <Badge variant="outline" className="text-blue-600 border-blue-200 bg-blue-50 dark:bg-blue-900/20">
+                                          {isInProgress ? 'Em Andamento' : 'Sua Vez'}
+                                        </Badge>
+                                        <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Passo {item.step}</span>
+                                      </div>
+                                      <h3 className="font-bold text-lg text-foreground">{item.title}</h3>
+                                      <p className="text-sm text-muted-foreground">{item.subtitle}</p>
+                                    </div>
+                                    <div className="flex flex-col gap-2 min-w-[120px]">
+                                      {isInProgress && (
+                                        <div className="space-y-1 mb-1">
+                                          <div className="flex justify-between text-[10px] uppercase font-bold text-muted-foreground">
+                                            <span>Progresso</span>
+                                            <span>{course?.progress}%</span>
+                                          </div>
+                                          <Progress value={course?.progress} className="h-1.5" />
+                                        </div>
+                                      )}
+                                      <Button
+                                        className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+                                        onClick={() => handleStartCourse(item.id)}
+                                      >
+                                        <Play className="w-4 h-4 mr-2 fill-current" />
+                                        {isInProgress ? 'Continuar' : 'Começar'}
+                                      </Button>
+                                    </div>
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            ) : (
+                              <div className="flex items-center justify-between py-1 opacity-70 hover:opacity-100 transition-opacity">
+                                <div>
+                                  <h4 className={`font-medium text-base ${isCompleted ? 'text-foreground line-through decoration-green-500/50' : 'text-muted-foreground'}`}>
+                                    {item.title}
+                                  </h4>
+                                  <div className="flex items-center gap-2 mt-0.5">
+                                    <span className="text-xs text-muted-foreground">Passo {item.step}</span>
+                                    {isCompleted && <span className="text-xs text-green-600 font-medium flex items-center"><CheckCircle className="w-3 h-3 mr-1" /> Concluído</span>}
+                                    {!isCompleted && <span className="text-xs text-muted-foreground flex items-center"><Clock className="w-3 h-3 mr-1" /> {item.duration}</span>}
+                                  </div>
+                                </div>
+                                {!isCompleted && (
+                                  <div className="hidden sm:block">
+                                    <Lock className="w-4 h-4 text-muted-foreground/50" />
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
 
           {/* Main Content */}
@@ -399,8 +556,8 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                       <div className="space-y-4">
                         {courses.filter(c => c.progress > 0 && c.progress < 100).map((course) => (
                           <div key={course.id} className="flex items-center space-x-4">
-                            <ImageWithFallback 
-                              src={course.image} 
+                            <ImageWithFallback
+                              src={course.image}
                               alt={course.title}
                               className="w-16 h-12 rounded-lg object-cover"
                             />
@@ -426,104 +583,7 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                 </Card>
 
                 {/* Trilha de Aprendizado Recomendada */}
-                <Card className="shadow-lg border-0 bg-card">
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-2 text-lg sm:text-xl">
-                      <Map className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                      <span>Trilha de Aprendizado Recomendada</span>
-                    </CardTitle>
-                    <CardDescription>
-                      Sequência sugerida de cursos para seu desenvolvimento profissional no 3RI
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {[
-                        { id: 4, step: 1, title: 'Certidões, Matrículas e Averbações', level: 'Básico', description: 'Comece pelo básico: aprenda sobre certidões e matrículas' },
-                        { id: 2, step: 2, title: 'Atendimento ao Público em Cartório', level: 'Intermediário', description: 'Desenvolva habilidades de atendimento ao público' },
-                        { id: 1, step: 3, title: 'Procedimentos de Registro de Imóveis', level: 'Avançado', description: 'Aprofunde-se nos procedimentos registrais' },
-                        { id: 5, step: 4, title: 'Gestão de Protocolo e Prazos Legais', level: 'Intermediário', description: 'Domine a gestão de protocolo e prazos' },
-                        { id: 3, step: 5, title: 'Normas da Corregedoria e Rotinas Internas', level: 'Avançado', description: 'Conheça as normas e rotinas internas do cartório' }
-                      ].map((item, index, array) => {
-                        const course = courses.find(c => c.id === item.id);
-                        const isCompleted = course?.completed || false;
-                        const isInProgress = (course?.progress ?? 0) > 0 && (course?.progress ?? 0) < 100;
-                        // Verifica se é o próximo curso recomendado (primeiro não completado após os anteriores completados)
-                        const previousCourse = index > 0 ? courses.find(c => c.id === array[index - 1].id) : null;
-                        const isNext = !isCompleted && !isInProgress && (index === 0 || (previousCourse?.completed || false));
 
-                        return (
-                          <div key={item.id} className="flex items-start space-x-4">
-                            <div className="flex flex-col items-center">
-                              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm ${
-                                isCompleted 
-                                  ? 'bg-green-600 dark:bg-green-500 text-white' 
-                                  : isInProgress 
-                                    ? 'bg-blue-600 dark:bg-blue-500 text-white' 
-                                    : isNext
-                                      ? 'bg-purple-600 dark:bg-purple-500 text-white ring-2 ring-purple-300 dark:ring-purple-700'
-                                      : 'bg-muted text-muted-foreground'
-                              }`}>
-                                {isCompleted ? <CheckCircle className="w-5 h-5" /> : item.step}
-                              </div>
-                              {index < array.length - 1 && (
-                                <div className={`w-0.5 h-12 my-1 ${
-                                  isCompleted ? 'bg-green-600 dark:bg-green-500' : 'bg-muted'
-                                }`} />
-                              )}
-                            </div>
-                            <div className="flex-1 pb-4">
-                              <div className="flex items-start justify-between mb-1">
-                                <div>
-                                  <h4 className={`font-medium ${
-                                    isCompleted 
-                                      ? 'text-green-600 dark:text-green-400' 
-                                      : isInProgress 
-                                        ? 'text-blue-600 dark:text-blue-400' 
-                                        : 'text-foreground'
-                                  }`}>
-                                    {item.title}
-                                  </h4>
-                                  <p className="text-xs text-muted-foreground mt-1">{item.description}</p>
-                                </div>
-                                <Badge variant={item.level === 'Básico' ? 'secondary' : item.level === 'Intermediário' ? 'default' : 'destructive'} className="ml-2">
-                                  {item.level}
-                                </Badge>
-                              </div>
-                              {isInProgress && course && (
-                                <div className="mt-2">
-                                  <Progress value={course.progress} className="h-2" />
-                                  <span className="text-xs text-muted-foreground mt-1">{course.progress}% concluído</span>
-                                </div>
-                              )}
-                              {isNext && (
-                                <Button 
-                                  size="sm" 
-                                  className="mt-2 bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-500 dark:to-blue-500"
-                                  onClick={() => handleStartCourse(item.id)}
-                                >
-                                  <Play className="w-4 h-4 mr-2" />
-                                  Iniciar Agora
-                                </Button>
-                              )}
-                              {isInProgress && (
-                                <Button 
-                                  size="sm" 
-                                  variant="outline"
-                                  className="mt-2"
-                                  onClick={() => handleStartCourse(item.id)}
-                                >
-                                  <Play className="w-4 h-4 mr-2" />
-                                  Continuar
-                                </Button>
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </CardContent>
-                </Card>
               </TabsContent>
 
               {/* Courses Tab */}
@@ -548,8 +608,8 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                           <Card key={course.id} className="shadow-lg border-0 bg-card hover:shadow-xl transition-shadow">
                             <CardContent className="p-6">
                               <div className="flex flex-col md:flex-row gap-6">
-                                <ImageWithFallback 
-                                  src={course.image} 
+                                <ImageWithFallback
+                                  src={course.image}
                                   alt={course.title}
                                   className="w-full md:w-48 h-32 rounded-lg object-cover"
                                 />
@@ -570,13 +630,13 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                                       </div>
                                     </div>
                                     <p className="text-sm text-muted-foreground mb-3">{course.description}</p>
-                                    
+
                                     <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                                       <span>👨‍🏫 {course.instructor}</span>
                                       <span>⏱️ {course.duration}</span>
                                       {course.hasExam && <span>🎯 Inclui prova</span>}
                                     </div>
-                                    
+
                                     {course.completed && course.grade && (
                                       <div className="flex items-center space-x-2 mt-2">
                                         <Star className="w-4 h-4 text-yellow-400 dark:text-yellow-500 fill-current" />
@@ -586,7 +646,7 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                                         </Badge>
                                       </div>
                                     )}
-                                    
+
                                     {course.progress > 0 && course.progress < 100 && (
                                       <div className="mt-3">
                                         <div className="flex justify-between text-sm mb-1">
@@ -597,7 +657,7 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                                       </div>
                                     )}
                                   </div>
-                                  
+
                                   <div className="flex items-center space-x-3">
                                     {course.completed ? (
                                       <div className="flex items-center space-x-3">
@@ -613,8 +673,8 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                                           const courseFeedback = feedbacks.find(f => f.courseId === course.id);
                                           if (courseFeedback) {
                                             return (
-                                              <Button 
-                                                variant="outline" 
+                                              <Button
+                                                variant="outline"
                                                 size="sm"
                                                 className="relative"
                                                 onClick={() => {
@@ -639,9 +699,9 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                                         Continuar Curso
                                       </Button>
                                     ) : null}
-                                    
+
                                     {course.progress > 80 && !course.completed && (
-                                      <Button 
+                                      <Button
                                         variant="outline"
                                         onClick={() => handleCompleteCourse(course.id)}
                                       >
@@ -685,8 +745,8 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                           <Card key={course.id} className="shadow-lg border-0 bg-card hover:shadow-xl transition-shadow">
                             <CardContent className="p-6">
                               <div className="flex flex-col md:flex-row gap-6">
-                                <ImageWithFallback 
-                                  src={course.image} 
+                                <ImageWithFallback
+                                  src={course.image}
                                   alt={course.title}
                                   className="w-full md:w-48 h-32 rounded-lg object-cover"
                                 />
@@ -701,14 +761,14 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                                       </div>
                                     </div>
                                     <p className="text-sm text-muted-foreground mb-3">{course.description}</p>
-                                    
+
                                     <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                                       <span>👨‍🏫 {course.instructor}</span>
                                       <span>⏱️ {course.duration}</span>
                                       {course.hasExam && <span>🎯 Inclui prova</span>}
                                     </div>
                                   </div>
-                                  
+
                                   <div className="flex items-center space-x-3">
                                     <Button onClick={() => handleStartCourse(course.id)} className="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500">
                                       <Play className="w-4 h-4 mr-2" />
@@ -752,8 +812,8 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                         {feedbacks
                           .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
                           .map((feedback) => (
-                            <Card 
-                              key={feedback.id} 
+                            <Card
+                              key={feedback.id}
                               className={`${!feedback.read ? 'border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30' : 'border-border'} hover:shadow-md transition-shadow`}
                             >
                               <CardContent className="p-4">
@@ -772,13 +832,12 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                                   <div className="flex items-center space-x-2">
                                     <div className="flex">
                                       {[...Array(5)].map((_, i) => (
-                                        <Star 
-                                          key={i} 
-                                          className={`w-4 h-4 ${
-                                            i < feedback.rating 
-                                              ? 'text-yellow-400 dark:text-yellow-500 fill-current' 
-                                              : 'text-muted-foreground/30'
-                                          }`} 
+                                        <Star
+                                          key={i}
+                                          className={`w-4 h-4 ${i < feedback.rating
+                                            ? 'text-yellow-400 dark:text-yellow-500 fill-current'
+                                            : 'text-muted-foreground/30'
+                                            }`}
                                         />
                                       ))}
                                     </div>
@@ -790,20 +849,20 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                                     )}
                                   </div>
                                 </div>
-                                
+
                                 <div className="bg-muted rounded-lg p-4 mb-3">
                                   <p className="text-foreground">{feedback.feedback}</p>
                                 </div>
-                                
+
                                 <div className="flex items-center justify-between">
                                   <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                                     <ThumbsUp className="w-4 h-4" />
                                     <span>Avaliação: {feedback.rating}/5</span>
                                   </div>
-                                  
+
                                   {!feedback.read && (
-                                    <Button 
-                                      size="sm" 
+                                    <Button
+                                      size="sm"
                                       onClick={() => onMarkFeedbackAsRead?.(feedback.id)}
                                       className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
                                     >
@@ -827,7 +886,7 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                     )}
                   </CardContent>
                 </Card>
-                
+
                 {/* Recent Feedbacks Summary */}
                 {feedbacks.length > 0 && (
                   <Card className="shadow-lg border-0 bg-card">
@@ -842,14 +901,14 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                           </div>
                           <div className="text-sm text-muted-foreground">Total de Feedbacks</div>
                         </div>
-                        
+
                         <div className="text-center p-4 bg-yellow-50 dark:bg-yellow-950/30 rounded-lg border border-yellow-200 dark:border-yellow-800">
                           <div className="text-2xl text-yellow-600 dark:text-yellow-400 mb-1">
                             {feedbacks.length > 0 ? (feedbacks.reduce((acc, f) => acc + f.rating, 0) / feedbacks.length).toFixed(1) : '0'}
                           </div>
                           <div className="text-sm text-muted-foreground">Avaliação Média</div>
                         </div>
-                        
+
                         <div className="text-center p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
                           <div className="text-2xl text-blue-600 dark:text-blue-400 mb-1">
                             {feedbacks.filter(f => !f.read).length}
@@ -880,11 +939,10 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                         <div className="space-y-4">
                           {chatMessages.map((message) => (
                             <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                              <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                                message.type === 'user' 
-                                  ? 'bg-blue-600 dark:bg-blue-500 text-white' 
-                                  : 'bg-card border border-border'
-                              }`}>
+                              <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${message.type === 'user'
+                                ? 'bg-blue-600 dark:bg-blue-500 text-white'
+                                : 'bg-card border border-border'
+                                }`}>
                                 <div className="flex items-start space-x-2">
                                   {message.type === 'ai' && (
                                     <Bot className="w-4 h-4 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
@@ -902,7 +960,7 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                               </div>
                             </div>
                           ))}
-                          
+
                           {isAiTyping && (
                             <div className="flex justify-start">
                               <div className="bg-card border border-border px-4 py-2 rounded-lg">
@@ -919,7 +977,7 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                           )}
                         </div>
                       </div>
-                      
+
                       <div className="flex space-x-2">
                         <Input
                           placeholder="Digite sua pergunta sobre os cursos..."
@@ -928,14 +986,14 @@ export function EmployeeDashboard({ onLogout, employee, isDemoMode = false, onUp
                           onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                           disabled={isAiTyping}
                         />
-                        <Button 
-                          onClick={handleSendMessage} 
+                        <Button
+                          onClick={handleSendMessage}
                           disabled={!chatInput.trim() || isAiTyping}
                         >
                           <Send className="w-4 h-4" />
                         </Button>
                       </div>
-                      
+
                       <div className="text-xs text-muted-foreground text-center">
                         A IA pode ajudar com dúvidas sobre conceitos, dicas de estudo e explicações dos cursos
                       </div>
